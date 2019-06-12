@@ -5,10 +5,13 @@
     <RootNamespace>LibPostalNet</RootNamespace>
     <AssemblyName>LibPostalNet</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ProjectGuid>{7154A21B-B8A8-4A1F-A1DB-078C1F1B600E}</ProjectGuid>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" $(Configuration) == 'Release' " >
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Label="Version">
