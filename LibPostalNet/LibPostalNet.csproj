@@ -1,65 +1,46 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7154A21B-B8A8-4A1F-A1DB-078C1F1B600E}</ProjectGuid>
+    <TargetFrameworks>netstandard2.0;net35;net40;net45</TargetFrameworks>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LibPostalNet</RootNamespace>
     <AssemblyName>LibPostalNet</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ProjectGuid>{7154A21B-B8A8-4A1F-A1DB-078C1F1B600E}</ProjectGuid>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+
+  <PropertyGroup Label="Version">
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
+
+  <PropertyGroup Label="NuGet">
+    <Authors>AeroXuk</Authors>
+    <Company>AeroXuk</Company>
+    <Product>LibPostalNet</Product>
+    <Title>LibPostalNet</Title>
+    <Description>A .Net wrapper for libpostal, a fast statistical parser/normalizer for street addresses anywhere in the world.</Description>
+    <Summary>A .Net wrapper for libpostal, a fast statistical parser/normalizer for street addresses anywhere in the world.</Summary>
+    <PackageId>LibPostalNet</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.DotNet.Analyzers.Compatibility" Version="0.2.12-alpha">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" !$(TargetFramework.StartsWith('netstandard')) ">
     <Reference Include="System" />
     <Reference Include="System.XML" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AddressExpansionResponse.Internal.cs" />
-    <Compile Include="AddressNearDupeHashResponse.cs" />
-    <Compile Include="AddressNearDupeHashResponse.Internal.cs" />
-    <Compile Include="AddressNearDupeHashOptions.cs" />
-    <Compile Include="AddressNearDupeHashOptions.Internal.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="AddressExpansionResponse.cs" />
-    <Compile Include="AddressParserOptions.cs" />
-    <Compile Include="AddressParserOptions.Internal.cs" />
-    <Compile Include="AddressParserResponse.cs" />
-    <Compile Include="AddressParserResponse.Internal.cs" />
-    <Compile Include="LibPostal.cs" />
-    <Compile Include="LibPostal.Internal.cs" />
-    <Compile Include="MarshalUTF8.cs" />
-    <Compile Include="AddressExpansionOptions.cs" />
-    <Compile Include="AddressExpansionOptions.Internal.cs" />
-  </ItemGroup>
+
   <ItemGroup>
     <Content Include="x86\libpostal.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -68,8 +49,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

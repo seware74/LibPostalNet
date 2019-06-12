@@ -9,7 +9,7 @@ namespace LibPostalNet
         // Instance Logic
         private static LibPostal s_instance;
         public static LibPostal GetInstance() => GetInstance(null);
-        public static LibPostal GetInstance(string dataDir) { return s_instance ?? (s_instance = new LibPostal(dataDir)); }
+        public static LibPostal GetInstance(string dataDir) => s_instance ?? (s_instance = new LibPostal(dataDir));
 
         // Library Logic
         private IntPtr _dataDirPtr;
@@ -61,11 +61,11 @@ namespace LibPostalNet
                 if (!string.IsNullOrEmpty(path))
                 {
 #if NET35
-                    bool is64bit = IntPtr.Size == 8;
+                    bool is64Bit = IntPtr.Size == 8;
 #else
-                    bool is64bit = Environment.Is64BitProcess;
+                    bool is64Bit = Environment.Is64BitProcess;
 #endif
-                    path = Path.Combine(path, is64bit ? "x64" : "x86");
+                    path = Path.Combine(path, is64Bit ? "x64" : "x86");
                     UnsafeNativeMethods.SetDllDirectory(path);
                     IntPtr moduleHandle = UnsafeNativeMethods.LoadLibrary("libpostal");
                     if (moduleHandle == IntPtr.Zero)
@@ -83,8 +83,15 @@ namespace LibPostalNet
                 UnsafeNativeMethods.Setup() :
                 UnsafeNativeMethods.SetupDatadir(_dataDirPtr);
         }
-        ~LibPostal() { Dispose(false); }
-        public void Dispose() { Dispose(true); GC.SuppressFinalize(this); }
+        ~LibPostal()
+        {
+            Dispose(false);
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
         protected virtual void Dispose(bool disposing)
         {
             s_instance = null;
@@ -136,7 +143,9 @@ namespace LibPostalNet
         public AddressExpansionResponse ExpandAddress(string input, AddressExpansionOptions options)
         {
             if (!IsLanguageClassifierLoaded)
-            { LoadLanguageClassifier(); }
+            {
+                LoadLanguageClassifier();
+            }
             return new AddressExpansionResponse(input, options);
         }
 
@@ -147,7 +156,9 @@ namespace LibPostalNet
         public AddressParserResponse ParseAddress(string address, AddressParserOptions options)
         {
             if (!IsParserLoaded)
-            { LoadParser(); }
+            {
+                LoadParser();
+            }
             return new AddressParserResponse(address, options);
         }
 
