@@ -3,23 +3,23 @@ namespace LibPostalNet
 {
     public unsafe partial class AddressParserOptions
     {
-        internal UnsafeNativeMethods _Native;
+        internal UnsafeNativeMethods.LibpostalParserOptions _native;
 
         internal AddressParserOptions()
         {
-            _Native = LibPostal.UnsafeNativeMethods.GetAddressParserDefaultOptions();
+            _native = UnsafeNativeMethods.GetAddressParserDefaultOptions();
         }
 
         public string Language
         {
-            get { return MarshalUTF8.PtrToString(_Native.language); }
-            set { _Native.language = MarshalUTF8.StringToPtr(value); }
+            get { return MarshalUTF8.PtrToString(_native._language); }
+            set { _native._language = MarshalUTF8.StringToPtr(value); }
         }
 
         public string Country
         {
-            get { return MarshalUTF8.PtrToString(_Native.country); }
-            set { _Native.country = MarshalUTF8.StringToPtr(value); }
+            get { return MarshalUTF8.PtrToString(_native._country); }
+            set { _native._country = MarshalUTF8.StringToPtr(value); }
         }
     }
 }

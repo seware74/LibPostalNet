@@ -9,17 +9,16 @@ namespace LibPostalNet
 {
     public unsafe partial class AddressParserResponse : IDisposable
     {
-        private IntPtr _Instance;
-        private IntPtr _InputString;
+        internal IntPtr _instance;
+        private IntPtr _inputString;
 
         internal AddressParserResponse(string address, AddressParserOptions options)
         {
-            if (ReferenceEquals(options, null)) throw new NullReferenceException();
-            _InputString = MarshalUTF8.StringToPtr(address);
-            var native = LibPostal.UnsafeNativeMethods.ParseAddress(_InputString, options._Native);
-            if (native == IntPtr.Zero || native.ToPointer() == null)
+            if (options is null) throw new NullReferenceException();
+            _inputString = MarshalUTF8.StringToPtr(address);
+            _instance = UnsafeNativeMethods.ParseAddress(_inputString, options._native);
+            if (_instance == IntPtr.Zero || _instance.ToPointer() == null)
                 return;
-            _Instance = native;
         }
 
         ~AddressParserResponse() { Dispose(false); }
@@ -30,15 +29,15 @@ namespace LibPostalNet
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (_Instance != IntPtr.Zero)
+            if (_instance != IntPtr.Zero)
             {
-                LibPostal.UnsafeNativeMethods.AddressParserResponseDestroy(_Instance);
-                _Instance = IntPtr.Zero;
+                UnsafeNativeMethods.AddressParserResponseDestroy(_instance);
+                _instance = IntPtr.Zero;
             }
-            if (_InputString != IntPtr.Zero)
+            if (_inputString != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(_InputString);
-                _InputString = IntPtr.Zero;
+                Marshal.FreeHGlobal(_inputString);
+                _inputString = IntPtr.Zero;
             }
         }
 
@@ -46,7 +45,7 @@ namespace LibPostalNet
         {
             get
             {
-                return (long)((UnsafeNativeMethods*)_Instance)->num_components;
+                return (long)((UnsafeNativeMethods.LibpostalAddressParserResponse*)_instance)->_num_components;
             }
         }
 
@@ -55,7 +54,7 @@ namespace LibPostalNet
             get
             {
                 long n = NumComponents;
-                IntPtr components = ((UnsafeNativeMethods*)_Instance)->components;
+                IntPtr components = ((UnsafeNativeMethods.LibpostalAddressParserResponse*)_instance)->_components;
                 string[] ret = new string[n];
                 for (int x = 0; x < n; x++)
                 {
@@ -71,7 +70,7 @@ namespace LibPostalNet
             get
             {
                 long n = NumComponents;
-                IntPtr labels = ((UnsafeNativeMethods*)_Instance)->labels;
+                IntPtr labels = ((UnsafeNativeMethods.LibpostalAddressParserResponse*)_instance)->_labels;
                 string[] ret = new string[n];
                 for (int x = 0; x < n; x++)
                 {
@@ -89,8 +88,8 @@ namespace LibPostalNet
                 var _results = new List<KeyValuePair<string, string>>();
 
                 IntPtr
-                    labels = ((UnsafeNativeMethods*)_Instance)->labels,
-                    components = ((UnsafeNativeMethods*)_Instance)->components
+                    labels = ((UnsafeNativeMethods.LibpostalAddressParserResponse*)_instance)->_labels,
+                    components = ((UnsafeNativeMethods.LibpostalAddressParserResponse*)_instance)->_components
                 ;
 
                 long n = NumComponents;
@@ -126,10 +125,10 @@ namespace LibPostalNet
         {
             XmlDocument doc = new XmlDocument();
             doc.AppendChild(doc.CreateXmlDeclaration("1.0", string.Empty, string.Empty));
-            var address = doc.CreateElement("address");
-            foreach (var x in Results)
+            XmlElement address = doc.CreateElement("address");
+            foreach (KeyValuePair<string, string> x in Results)
             {
-                var elem = doc.CreateElement(x.Key);
+                XmlElement elem = doc.CreateElement(x.Key);
                 elem.AppendChild(doc.CreateTextNode(x.Value));
                 address.AppendChild(elem);
             }

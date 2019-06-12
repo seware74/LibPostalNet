@@ -9,39 +9,13 @@ namespace LibPostalNet
         protected internal struct UnsafeNativeMethods
         {
             [SuppressUnmanagedCodeSecurity]
+            [DllImport("kernel32.dll", SetLastError = true)]
+            internal static extern IntPtr LoadLibrary(string lpFileName);
+
+            [SuppressUnmanagedCodeSecurity]
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             internal static extern bool SetDllDirectory(string lpPathName);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libpostal", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libpostal_get_default_options")]
-            internal static extern AddressExpansionOptions.UnsafeNativeMethods GetDefaultOptions();
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libpostal", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libpostal_expand_address")]
-            internal static extern IntPtr ExpandAddress(IntPtr input, AddressExpansionOptions.UnsafeNativeMethods options, ref ulong n);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libpostal", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libpostal_expansion_array_destroy")]
-            internal static extern void ExpansionArrayDestroy(IntPtr expansions, ulong n);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libpostal", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libpostal_address_parser_response_destroy")]
-            internal static extern void AddressParserResponseDestroy(IntPtr self);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libpostal", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libpostal_get_address_parser_default_options")]
-            internal static extern AddressParserOptions.UnsafeNativeMethods GetAddressParserDefaultOptions();
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libpostal", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libpostal_parse_address")]
-            internal static extern IntPtr ParseAddress(IntPtr address, AddressParserOptions.UnsafeNativeMethods options);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libpostal", CallingConvention = CallingConvention.Cdecl,

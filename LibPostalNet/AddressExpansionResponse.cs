@@ -5,28 +5,27 @@ using System.Xml;
 
 namespace LibPostalNet
 {
-    public unsafe class AddressExpansionResponse : IDisposable
+    public unsafe partial class AddressExpansionResponse : IDisposable
     {
-        private IntPtr _Instance;
-        private IntPtr _InputString;
-        private ulong _NumExpansions;
+        private IntPtr _instance;
+        private IntPtr _inputString;
+        private ulong _numExpansions;
 
         public string[] Expansions { get; private set; }
 
         internal AddressExpansionResponse(string input, AddressExpansionOptions options)
         {
-            if (ReferenceEquals(options, null)) throw new NullReferenceException();
-            _InputString = MarshalUTF8.StringToPtr(input);
-            var native = LibPostal.UnsafeNativeMethods.ExpandAddress(_InputString, options._Native, ref _NumExpansions);
-            if (native == IntPtr.Zero || native.ToPointer() == null)
+            if (options is null) throw new NullReferenceException();
+            _inputString = MarshalUTF8.StringToPtr(input);
+            _instance = UnsafeNativeMethods.ExpandAddress(_inputString, options._native, ref _numExpansions);
+            if (_instance == IntPtr.Zero || _instance.ToPointer() == null)
                 return;
-            _Instance = native;
 
-            Expansions = new string[_NumExpansions];
-            for (int x = 0; x < (int)_NumExpansions; x++)
+            Expansions = new string[_numExpansions];
+            for (int x = 0; x < (int)_numExpansions; x++)
             {
                 int offset = x * Marshal.SizeOf(typeof(IntPtr));
-                Expansions[x] = MarshalUTF8.PtrToString(Marshal.ReadIntPtr(native, offset));
+                Expansions[x] = MarshalUTF8.PtrToString(Marshal.ReadIntPtr(_instance, offset));
             }
         }
 
@@ -38,15 +37,15 @@ namespace LibPostalNet
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (_Instance != IntPtr.Zero)
+            if (_instance != IntPtr.Zero)
             {
-                LibPostal.UnsafeNativeMethods.ExpansionArrayDestroy(_Instance, _NumExpansions);
-                _Instance = IntPtr.Zero;
+                UnsafeNativeMethods.ExpansionArrayDestroy(_instance, _numExpansions);
+                _instance = IntPtr.Zero;
             }
-            if (_InputString != IntPtr.Zero)
+            if (_inputString != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(_InputString);
-                _InputString = IntPtr.Zero;
+                Marshal.FreeHGlobal(_inputString);
+                _inputString = IntPtr.Zero;
             }
         }
 
@@ -64,10 +63,10 @@ namespace LibPostalNet
         {
             XmlDocument doc = new XmlDocument();
             doc.AppendChild(doc.CreateXmlDeclaration("1.0", string.Empty, string.Empty));
-            var address = doc.CreateElement("address");
+            XmlElement address = doc.CreateElement("address");
             foreach (var expansion in Expansions)
             {
-                var elem = doc.CreateElement("expansion");
+                XmlElement elem = doc.CreateElement("expansion");
                 elem.AppendChild(doc.CreateTextNode(expansion));
                 address.AppendChild(elem);
             }
