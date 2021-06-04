@@ -23,3 +23,9 @@ before_build:
     cd ..\..\
 build:
   project: LibPostalNet.sln
+after_build:
+- cmd: >-
+    7z a libpostalnet.zip $Env:APPVEYOR_BUILD_FOLDER\libpostalnet.dll $Env:APPVEYOR_BUILD_FOLDER\libpostalnet.pdb
+ artifacts:
+- path: libpostalnet.zip
+  name: libpostalnet
