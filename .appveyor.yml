@@ -10,13 +10,13 @@ before_build:
 
     cd LibPostalNet\x86
 
-    curl -sSL -o "libpostal.zip" "https://goo.gl/Bf3EzE"
+    curl -sSL -o "libpostal.zip" "https://ci.appveyor.com/api/buildjobs/y31gc0mddv3cbcy9/artifacts/libpostal.zip"
 
     7z.exe e libpostal.zip *.dll
 
     cd ..\x64
 
-    curl -sSL -o "libpostal.zip" "https://goo.gl/o8DAi8"
+    curl -sSL -o "libpostal.zip" "https://ci.appveyor.com/api/buildjobs/9tw6iwxxmts1qaxv/artifacts/libpostal.zip"
 
     7z.exe e libpostal.zip *.dll
 
