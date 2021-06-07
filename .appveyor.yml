@@ -24,6 +24,7 @@ before_build:
 build:
   project: LibPostalNet.sln
 after_build:
+- cmd: csc /t:LibPostal.cs /keyfile:libpostalnet.snk
 - ps: |
    7z a libpostalnet.zip $Env:APPVEYOR_BUILD_FOLDER\libpostalnet\bin\*
 artifacts:
